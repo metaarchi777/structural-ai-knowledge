@@ -3,16 +3,14 @@
  * Strategic Intelligence Dashboard — Top navigation bar with search
  */
 import { useState, useRef, useEffect } from 'react';
-import { LayoutGrid, GitBranch, BarChart3, Info, Search, X, Waypoints } from 'lucide-react';
+import { Info, Search, X, Waypoints } from 'lucide-react';
 import { GRAPH_NODES, type GraphNode } from '@/lib/graphData';
 
 interface Props {
-  activeView: 'graph' | 'roadmap' | 'stats';
-  onViewChange: (v: 'graph' | 'roadmap' | 'stats') => void;
   onSearchSelect: (node: GraphNode | null) => void;
 }
 
-export default function Header({ activeView, onViewChange, onSearchSelect }: Props) {
+export default function Header({ onSearchSelect }: Props) {
   const [showInfo, setShowInfo] = useState(false);
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<GraphNode[]>([]);
@@ -52,8 +50,6 @@ export default function Header({ activeView, onViewChange, onSearchSelect }: Pro
     onSearchSelect(node);
     setQuery(node.label);
     setShowResults(false);
-    // Switch to graph view if not already there
-    if (activeView !== 'graph') onViewChange('graph');
   };
 
   const handleClear = () => {
@@ -213,29 +209,6 @@ export default function Header({ activeView, onViewChange, onSearchSelect }: Pro
           </div>
         )}
       </div>
-
-      {/* View switcher */}
-      <nav className="flex items-center gap-1 flex-shrink-0">
-        {([
-          { id: 'graph', icon: GitBranch, label: '지식 그래프' },
-          { id: 'roadmap', icon: LayoutGrid, label: 'AI 로드맵' },
-          { id: 'stats', icon: BarChart3, label: '현황 분석' },
-        ] as const).map(({ id, icon: Icon, label }) => (
-          <button
-            key={id}
-            onClick={() => onViewChange(id)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded text-xs transition-all"
-            style={{
-              background: activeView === id ? 'rgba(0,212,255,0.15)' : 'transparent',
-              color: activeView === id ? '#00d4ff' : '#64748b',
-              border: `1px solid ${activeView === id ? 'rgba(0,212,255,0.4)' : 'transparent'}`,
-            }}
-          >
-            <Icon size={13} />
-            <span className="hidden lg:inline">{label}</span>
-          </button>
-        ))}
-      </nav>
 
       {/* Info button */}
       <div className="relative flex-shrink-0">

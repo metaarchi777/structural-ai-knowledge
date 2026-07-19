@@ -8,8 +8,6 @@ import Header from '@/components/Header';
 import LeftPanel from '@/components/LeftPanel';
 import RightPanel from '@/components/RightPanel';
 import KnowledgeGraph from '@/components/KnowledgeGraph';
-import RoadmapView from '@/components/RoadmapView';
-import StatsView from '@/components/StatsView';
 import { type GraphNode, type NodeCategory } from '@/lib/graphData';
 
 const ALL_CATEGORIES = new Set<NodeCategory>([
@@ -17,7 +15,6 @@ const ALL_CATEGORIES = new Set<NodeCategory>([
 ]);
 
 export default function Home() {
-  const [activeView, setActiveView] = useState<'graph' | 'roadmap' | 'stats'>('graph');
   const [activeCategories, setActiveCategories] = useState<Set<NodeCategory>>(new Set(ALL_CATEGORIES));
   const [selectedNode, setSelectedNode] = useState<GraphNode | null>(null);
   const [highlightNodeId, setHighlightNodeId] = useState<string | null>(null);
@@ -59,7 +56,7 @@ export default function Home() {
       className="h-screen flex flex-col overflow-hidden blueprint-grid"
       style={{ background: '#0a0e1a' }}
     >
-      <Header activeView={activeView} onViewChange={setActiveView} onSearchSelect={handleSearchSelect} />
+      <Header onSearchSelect={handleSearchSelect} />
 
       <div className="flex flex-1 overflow-hidden">
         {/* Left panel always visible */}
@@ -70,8 +67,7 @@ export default function Home() {
 
         {/* Main content */}
         <main className="flex-1 flex overflow-hidden relative">
-          {activeView === 'graph' && (
-            <>
+          <>
               {/* Graph canvas */}
               <div className="flex-1 relative overflow-hidden">
               {/* 배경: 은은한 방사형 글로우 (외부 이미지 의존 없음) */}
@@ -114,11 +110,7 @@ export default function Home() {
                 onClose={() => setSelectedNode(null)}
                 onNodeSelect={setSelectedNode}
               />
-            </>
-          )}
-
-          {activeView === 'roadmap' && <RoadmapView />}
-          {activeView === 'stats' && <StatsView />}
+          </>
         </main>
       </div>
       {/* Footer watermark */}
